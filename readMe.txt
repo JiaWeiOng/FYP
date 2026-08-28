@@ -8,9 +8,5 @@
                               and the Firebase Cloud Function.
 
 
-Credentials :
-admin website:
-email: jwong7472@gmail.com
-password :Jwong111!
 
 
