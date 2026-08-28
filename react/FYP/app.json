@@ -1,0 +1,85 @@
+{
+  "expo": {
+    "name": "Universal QR Code Detection",
+    "slug": "fyp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/QR.jpg",
+    "scheme": "fyp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/images/QR.jpg",
+        "backgroundImage": "./assets/images/QR.jpg",
+        "monochromeImage": "./assets/images/QR.jpg"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.jwong1111sorganization.fyp",
+      "googleServicesFile": "./google-services.json",
+      "allowBackup": false
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
+        }
+      ],
+      "react-native-fast-tflite",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow FYP to use the camera to scan QR codes."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow FYP to import a QR-code image from your gallery."
+        }
+      ],
+      "expo-asset",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow FYP to use Face ID to confirm opening dangerous links."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow FYP to use your location so we can warn you about phishing QR hotspots nearby."
+        }
+      ],
+      "expo-notifications"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "359fbc2d-e0ff-4825-b5e9-7ee5880cb40e"
+      }
+    },
+    "owner": "jwong1111s-organization"
+  }
+}
