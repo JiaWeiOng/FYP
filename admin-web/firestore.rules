@@ -1,0 +1,83 @@
+rules_version = '2';
+
+// Firestore security rules for the Universal Secure QR Detector System.
+//
+// Covers BOTH the mobile app (per-user data) and the admin console (read-all
+// for admins). Publish in Firebase Console -> Firestore Database -> Rules, or:
+//   firebase deploy --only firestore:rules
+//
+// An admin is any user with a document at admins/{uid}. Seed the first admin
+// manually in the console (Firestore -> add collection "admins" -> doc id = the
+// user's Auth UID). Client writes to admins/ are denied.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Admin markers: a user may read ONLY their own admin doc (login self-check).
+    // No client writes — seed admins from the Firebase console.
+    match /admins/{uid} {
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Public username -> email lookup. Single-doc GET is public so a user can
+    // resolve a username at login / check uniqueness at signup; LIST is blocked
+    // so nobody can enumerate everyone's usernames + emails.
+    match /usernames/{name} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if isSignedIn()
+                    && request.resource.data.uid == request.auth.uid;
+      allow update: if false;
+      allow delete: if isSignedIn()
+                    && resource.data.uid == request.auth.uid;
+    }
+
+    // User profile + every subcollection (history, secureQr, stego):
+    // the owner has full access; admins may read/write too.
+    match /users/{uid} {
+      allow read, write: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+
+      match /{sub}/{doc} {
+        allow read, write: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+      }
+    }
+
+    // Collection-group reads for the admin console (monitoring across all users).
+    match /{path=**}/history/{doc}  { allow read: if isAdmin(); }
+    match /{path=**}/secureQr/{doc} { allow read: if isAdmin(); }
+    match /{path=**}/stego/{doc}    { allow read: if isAdmin(); }
+
+    // Block / allow lists: signed-in users may READ (the app can consume them);
+    // only admins may WRITE (managed from the admin console).
+    match /blocklist/{domain} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /whitelist/{domain} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Geo alerts (Notify User according to GPS location): signed-in users may
+    // READ (the app checks if it's inside an alert radius); only admins WRITE.
+    // The Phase-3 Cloud Function uses the Admin SDK and bypasses these rules.
+    match /geoAlerts/{id} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // AI training dataset (Manage AI Dataset): admin-only.
+    match /dataset/{id} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

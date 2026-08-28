@@ -1,0 +1,48 @@
+# ---------------------------------------------------------------- secrets
+# NEVER commit these. Git history is permanent — deleting a file in a later
+# commit does not remove it from the repository.
+serviceAccount.json
+**/serviceAccount.json
+*-firebase-adminsdk-*.json
+.env.local
+**/.env.local
+*.local
+
+# ---------------------------------------------------------------- dependencies
+node_modules/
+**/node_modules/
+
+# ---------------------------------------------------------------- build output
+dist/
+dist-ssr/
+web-build/
+.expo/
+expo-env.d.ts
+*.tsbuildinfo
+
+# ---------------------------------------------------------------- binaries
+# GitHub rejects any single file over 100 MB
+*.apk
+*.aab
+*.keystore
+*.jks
+*.p8
+*.p12
+*.pem
+*.mobileprovision
+
+# ---------------------------------------------------------------- editor / os
+.vscode/
+.claude/
+.DS_Store
+Thumbs.db
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+.metro-health-check*
+
+# ---------------------------------------------------------------- native
+/ios
+/android
+.kotlin/
+*.orig.*

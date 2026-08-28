@@ -1,0 +1,13 @@
+{
+  "name": "hotspot-push-sender",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local sender: pushes the latest phishing-hotspot alert to users in the radius (Expo push API, no Blaze).",
+  "scripts": {
+    "send": "node sendHotspotPush.mjs"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.6.0"
+  }
+}
